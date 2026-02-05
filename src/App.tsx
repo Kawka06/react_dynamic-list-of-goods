@@ -8,17 +8,17 @@ import { Good } from './types/Good';
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[]>([]);
 
-  const handleLoadAll = () => {
-    getAll().then(setGoods);
+  const loadGoods = (loader: () => Promise<Good[]>) => {
+    loader()
+      .then(setGoods)
+      .catch(() => {
+        setGoods([]);
+      });
   };
 
-  const handleLoadFirstFive = () => {
-    get5First().then(setGoods);
-  };
-
-  const handleLoadRed = () => {
-    getRedGoods().then(setGoods);
-  };
+  const handleLoadAll = () => loadGoods(getAll);
+  const handleLoadFirstFive = () => loadGoods(get5First);
+  const handleLoadRed = () => loadGoods(getRedGoods);
 
   return (
     <div className="App">
@@ -44,4 +44,3 @@ export const App: React.FC = () => {
     </div>
   );
 };
-
